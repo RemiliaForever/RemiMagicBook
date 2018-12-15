@@ -1,17 +1,25 @@
-pub struct SinglyLinkedList {
-    pub data: i64,
-    pub next: Option<Box<SinglyLinkedList>>,
+use std::fmt::Display;
+
+pub struct SinglyLinkedList<T>
+where
+    T: Display + Default,
+{
+    pub data: T,
+    pub next: Option<Box<SinglyLinkedList<T>>>,
 }
 
-impl SinglyLinkedList {
-    pub fn new() -> SinglyLinkedList {
+impl<T> SinglyLinkedList<T>
+where
+    T: Display + Default,
+{
+    pub fn new() -> SinglyLinkedList<T> {
         SinglyLinkedList {
-            data: -1,
+            data: T::default(),
             next: None,
         }
     }
 
-    pub fn next(&self) -> Option<&SinglyLinkedList> {
+    pub fn next(&self) -> Option<&SinglyLinkedList<T>> {
         if let Some(ref next) = self.next {
             Some(next)
         } else {
@@ -19,7 +27,7 @@ impl SinglyLinkedList {
         }
     }
 
-    pub fn next_mut(&mut self) -> Option<&mut SinglyLinkedList> {
+    pub fn next_mut(&mut self) -> Option<&mut SinglyLinkedList<T>> {
         if let Some(ref mut next) = self.next {
             Some(next)
         } else {
@@ -28,7 +36,7 @@ impl SinglyLinkedList {
     }
 
     /// insert a new node after cursor
-    pub fn insert(&mut self, data: i64) {
+    pub fn insert(&mut self, data: T) {
         let mut node = Box::new(SinglyLinkedList {
             data: data,
             next: None,
@@ -45,7 +53,10 @@ impl SinglyLinkedList {
     }
 }
 
-impl std::fmt::Debug for SinglyLinkedList {
+impl<T> std::fmt::Debug for SinglyLinkedList<T>
+where
+    T: Display + Default,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         let mut cursor = self;
         write!(f, "(start)")?;
@@ -58,7 +69,10 @@ impl std::fmt::Debug for SinglyLinkedList {
 }
 
 #[cfg(debug_assertions)]
-impl Drop for SinglyLinkedList {
+impl<T> Drop for SinglyLinkedList<T>
+where
+    T: Display + Default,
+{
     fn drop(&mut self) {
         println!("drop {}", self.data);
     }
