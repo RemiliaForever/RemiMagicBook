@@ -1,0 +1,59 @@
+pipeline:
+    restore_cache:
+        image: drillster/drone-volume-cache
+        pull: true
+        restore: true
+        mount:
+            - ./.cargo
+        volumes:
+            - /home/docker/drone/cache:/cache
+
+    build:
+        image: xd009642/tarpaulin:develop-nightly
+        pull: true
+        commands:
+            - export CARGO_HOME=./.cargo
+            - cargo build
+
+    test:
+        image: xd009642/tarpaulin:develop-nightly
+        commands:
+            - export CARGO_HOME=./.cargo
+            - cargo tarpaulin -p data_structure algorithm RemiMagicBook --out Xml -v
+
+    upload_cov:
+        image: robertstettner/drone-codecov
+        pull: true
+        secrets: [ codecov_token ]
+        files:
+            - cobertura.xml
+
+    rebuild_cache:
+        image: drillster/drone-volume-cache
+        rebuild: true
+        mount:
+            - ./.cargo
+        volumes:
+            - /home/docker/drone/cache:/cache
+
+
+    notify:
+        image: appleboy/drone-telegram
+        pull: true
+        when:
+            status: [ success, failure ]
+        format: markdown
+        to: -155562062
+        secrets: [ telegram_token ]
+        message: |
+            {{#success build.status}}
+                *Success* [{{repo.owner}}/{{repo.name}} #{{build.number}}]({{build.link}})
+            {{else}}
+                *Failed* {{build.link}}
+            {{/success}}
+            *Branch*: {{commit.Branch}}
+            *Author*: {{commit.Author}}
+            *Message*: {{commit.Message}}
+            *Elapsed*: {{buildtime build.started}}
+        when:
+            status: [ success, failure ]

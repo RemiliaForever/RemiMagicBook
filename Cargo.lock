@@ -1,0 +1,16 @@
+[[package]]
+name = "RemiMagicBook"
+version = "0.1.0"
+dependencies = [
+ "algorithm 0.1.0",
+ "data_structure 0.1.0",
+]
+
+[[package]]
+name = "algorithm"
+version = "0.1.0"
+
+[[package]]
+name = "data_structure"
+version = "0.1.0"
+
