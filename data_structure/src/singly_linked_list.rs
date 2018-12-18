@@ -20,18 +20,16 @@ where
     }
 
     pub fn next(&self) -> Option<&SinglyLinkedList<T>> {
-        if let Some(ref next) = self.next {
-            Some(next)
-        } else {
-            None
+        match self.next {
+            Some(ref next) => Some(next),
+            _ => None,
         }
     }
 
     pub fn next_mut(&mut self) -> Option<&mut SinglyLinkedList<T>> {
-        if let Some(ref mut next) = self.next {
-            Some(next)
-        } else {
-            None
+        match self.next {
+            Some(ref mut next) => Some(next),
+            _ => None,
         }
     }
 
