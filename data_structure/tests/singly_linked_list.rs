@@ -46,6 +46,10 @@ fn test_delete() {
     cursor.delete();
     cursor = cursor.next_mut().unwrap();
     cursor.delete();
+    cursor = cursor.next_mut().unwrap();
+    cursor = cursor.next_mut().unwrap();
+    cursor = cursor.next_mut().unwrap();
+    cursor.delete();
     assert_eq!(
         "(start)->(8)->(7)->(6)->(4)->(2)->(1)->(0)",
         format!("{:?}", list)

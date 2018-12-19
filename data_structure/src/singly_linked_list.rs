@@ -46,8 +46,10 @@ where
     /// delete node after cursor
     pub fn delete(&mut self) {
         let mut next = None;
-        std::mem::swap(&mut self.next, &mut next);
-        std::mem::swap(&mut self.next, &mut next.unwrap().next);
+        if self.next().is_some() {
+            std::mem::swap(&mut self.next, &mut next);
+            std::mem::swap(&mut self.next, &mut next.unwrap().next);
+        }
     }
 }
 
